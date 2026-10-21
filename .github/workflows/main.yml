@@ -1,1 +1,37 @@
+name: Build kujama09-visuals
 
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+    inputs: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: kujama09-visuals
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Permisos de gradlew
+        run: chmod +x gradlew
+
+      - name: Compilar
+        run: ./gradlew build --no-daemon
+
+      - name: Subir el JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: kujama09-visuals-jar
+          path: kujama09-visuals/build/libs/*.jar
