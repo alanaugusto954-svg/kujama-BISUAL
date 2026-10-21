@@ -10,13 +10,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
-/** Dibuja el HUD: barra superior, teclas, coordenadas y CPS. */
+/** HUD minimalista: FPS, hora, canción de Spotify, coordenadas, teclas y CPS. Sin paneles pesados. */
 public final class HudRenderer {
-    private static final int BG = 0xAA0B0E14;
-    private static final int BORDER = 0x40FFFFFF;
-    private static final int GREEN = 0xFF2ED573;
-    private static final int WHITE = 0xFFFFFFFF;
-    private static final int GREY = 0xFFB8C0CC;
+    private static final int TEXT = 0xE6FFFFFF;
+    private static final int DIM = 0x99C8CCD6;
     private static final DateTimeFormatter CLOCK = DateTimeFormatter.ofPattern("HH:mm");
 
     private HudRenderer() {
@@ -32,8 +29,12 @@ public final class HudRenderer {
         int width = mc.getWindow().getScaledWidth();
         int height = mc.getWindow().getScaledHeight();
 
-        // Atmósfera: degradado de color arriba, para el cielo de color.
-        if (cfg.sky != SkyTheme.OFF && cfg.skyStrength > 0) {
+        // Cielo: líneas animadas (tema void) o degradado de color (otros temas).
+        if (cfg.sky == SkyTheme.VOID) {
+            if (cfg.skyLines) {
+                SkyOverlay.render(context, mc, width, height, cfg.skyStrength);
+            }
+        } else if (cfg.sky != SkyTheme.OFF && cfg.skyStrength > 0) {
             int alpha = Math.round(0x70 * (cfg.skyStrength / 100f));
             context.fillGradient(0, 0, width, Math.round(height * 0.55f), cfg.sky.argb(alpha), cfg.sky.argb(0));
         }
@@ -44,83 +45,94 @@ public final class HudRenderer {
             return;
         }
         TextRenderer font = mc.textRenderer;
-        float scale = cfg.hudScale;
-        float vw = width / scale;
+        float scale = cfg.hudScale * 0.85f;
+        int vw = Math.round(width / scale);
+        int vh = Math.round(height / scale);
 
         Matrix3x2fStack matrices = context.getMatrices();
         matrices.pushMatrix();
         matrices.scale(scale, scale);
 
         if (cfg.topBar) {
-            drawTopBar(context, font, mc, (int) vw);
+            String fps = "FPS: " + mc.getCurrentFps();
+            context.drawText(font, fps, (vw - font.getWidth(fps)) / 2, 4, TEXT, true);
+            String time = LocalTime.now().format(CLOCK);
+            context.drawText(font, time, vw - font.getWidth(time) - 6, 6, TEXT, true);
         }
-        int y = 6;
-        if (cfg.keystrokes) {
-            y = drawKeys(context, font, mc, 6, y) + 6;
+
+        if (cfg.music && SpotifyReader.isPlaying()) {
+            drawMusic(context, font, vw / 2 - 80, cfg.topBar ? 17 : 6);
         }
+
         if (cfg.coords) {
-            String xyz = String.format(Locale.ROOT, "XYZ: %.1f / %.1f / %.1f",
+            String xyz = String.format(Locale.ROOT, "%.1f, %.1f, %.1f",
                     mc.player.getX(), mc.player.getY(), mc.player.getZ());
-            drawPanelText(context, font, xyz, 6, y, WHITE);
-            y += 16;
+            context.drawText(font, xyz, 6, 6, TEXT, true);
+            context.drawText(font, "Visuals by kujama09", 6, 17, DIM, true);
         }
-        if (cfg.cps) {
-            String text = "CPS: " + CpsCounter.left() + " | " + CpsCounter.right();
-            drawPanelText(context, font, text, 6, y, GREY);
+
+        if (cfg.keystrokes || cfg.cps) {
+            drawKeysAndCps(context, font, mc, cfg, 6, vh);
         }
 
         matrices.popMatrix();
     }
 
-    private static void drawTopBar(DrawContext context, TextRenderer font, MinecraftClient mc, int virtualWidth) {
-        String name = mc.player.getName().getString();
-        String fps = mc.getCurrentFps() + " fps";
-        String time = LocalTime.now().format(CLOCK);
+    /** Tarjeta con la canción: icono, título, artista y unas barras animadas. */
+    private static void drawMusic(DrawContext context, TextRenderer font, int x, int y) {
+        int w = 160;
+        int h = 28;
+        context.fill(x - 1, y - 1, x + w + 1, y + h + 1, 0x24FFFFFF);
+        context.fill(x, y, x + w, y + h, 0xA0101018);
 
-        int pad = 6;
-        int badge = 11;
-        int sep = 9;
-        int w = pad + badge + 5 + font.getWidth(name) + sep + font.getWidth(fps) + sep + font.getWidth(time) + pad;
-        int h = 17;
-        int x = (virtualWidth - w) / 2;
-        int y = 3;
+        // Icono
+        context.fillGradient(x + 3, y + 3, x + 25, y + 25, 0xFF3B2A6B, 0xFF14101F);
+        context.drawText(font, "♪", x + 11, y + 10, TEXT, false);
 
-        context.fill(x - 1, y - 1, x + w + 1, y + h + 1, BORDER);
-        context.fill(x, y, x + w, y + h, BG);
+        String title = font.trimToWidth(SpotifyReader.title(), w - 62);
+        String artist = font.trimToWidth(SpotifyReader.artist(), w - 62);
+        context.drawText(font, title, x + 30, y + 5, TEXT, false);
+        context.drawText(font, artist, x + 30, y + 16, DIM, false);
 
-        int cx = x + pad;
-        context.fill(cx, y + 3, cx + badge, y + 3 + badge, GREEN);
-        context.drawText(font, "K", cx + 3, y + 5, 0xFF04210F, false);
-        cx += badge + 5;
-        context.drawText(font, name, cx, y + 5, WHITE, true);
-        cx += font.getWidth(name) + sep;
-        context.drawText(font, fps, cx, y + 5, GREEN, true);
-        cx += font.getWidth(fps) + sep;
-        context.drawText(font, time, cx, y + 5, GREY, true);
+        // Barras animadas (indican que está sonando)
+        float t = System.nanoTime() / 1_000_000_000f;
+        for (int i = 0; i < 4; i++) {
+            int bh = 3 + Math.round(8 * (0.5f + 0.5f * (float) Math.sin(t * (4f + i * 1.7f) + i)));
+            int bx = x + w - 22 + i * 5;
+            context.fill(bx, y + 20 - bh, bx + 3, y + 20, 0xCC9B7BFF);
+        }
     }
 
-    /** Devuelve la coordenada Y donde termina el bloque de teclas. */
-    private static int drawKeys(DrawContext context, TextRenderer font, MinecraftClient mc, int x, int y) {
-        int k = 18;
+    private static void drawKeysAndCps(DrawContext context, TextRenderer font, MinecraftClient mc,
+                                       VisualsConfig cfg, int x, int vh) {
+        int k = 16;
         int gap = 2;
-        drawKey(context, font, "W", mc.options.forwardKey, x + k + gap, y, k, k);
-        drawKey(context, font, "A", mc.options.leftKey, x, y + k + gap, k, k);
-        drawKey(context, font, "S", mc.options.backKey, x + k + gap, y + k + gap, k, k);
-        drawKey(context, font, "D", mc.options.rightKey, x + 2 * (k + gap), y + k + gap, k, k);
-        drawKey(context, font, "SPACE", mc.options.jumpKey, x, y + 2 * (k + gap), 3 * k + 2 * gap, 14);
-        return y + 2 * (k + gap) + 14;
+        int blockH = k + gap + k + gap + 14;
+        int y0 = vh - 6 - blockH;
+
+        if (cfg.cps) {
+            context.drawText(font, "CPS: " + CpsCounter.left() + " | " + CpsCounter.right(),
+                    x, y0 - 12, TEXT, true);
+        }
+        if (!cfg.keystrokes) {
+            return;
+        }
+        drawKey(context, font, "W", mc.options.forwardKey, x + k + gap, y0, k, k);
+        drawKey(context, font, "A", mc.options.leftKey, x, y0 + k + gap, k, k);
+        drawKey(context, font, "S", mc.options.backKey, x + k + gap, y0 + k + gap, k, k);
+        drawKey(context, font, "D", mc.options.rightKey, x + 2 * (k + gap), y0 + k + gap, k, k);
+        int by = y0 + 2 * (k + gap);
+        int bw = (3 * k + 2 * gap - gap) / 2;
+        drawKey(context, font, "LMB", mc.options.attackKey, x, by, bw, 14);
+        drawKey(context, font, "RMB", mc.options.useKey, x + bw + gap, by, bw, 14);
     }
 
     private static void drawKey(DrawContext context, TextRenderer font, String label, KeyBinding key,
                                 int x, int y, int w, int h) {
         boolean down = key.isPressed();
-        context.fill(x, y, x + w, y + h, down ? 0xCCFFFFFF : 0x99000000);
-        int color = down ? 0xFF0B0E14 : WHITE;
+        context.fill(x, y, x + w, y + h, down ? 0x66FFFFFF : 0x30FFFFFF);
+        context.fill(x + 1, y + 1, x + w - 1, y + h - 1, down ? 0xDDFFFFFF : 0x99101018);
+        int color = down ? 0xFF101018 : TEXT;
         context.drawText(font, label, x + (w - font.getWidth(label)) / 2, y + (h - 8) / 2, color, false);
-    }
-
-    private static void drawPanelText(DrawContext context, TextRenderer font, String text, int x, int y, int color) {
-        context.fill(x - 3, y - 2, x + font.getWidth(text) + 3, y + 11, 0x80000000);
-        context.drawText(font, text, x, y, color, true);
     }
 }

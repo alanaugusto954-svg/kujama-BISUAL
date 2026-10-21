@@ -22,11 +22,17 @@ public final class VisualsConfig {
     public boolean cps = true;
     /** Escala del HUD (1.0 a 3.0). */
     public float hudScale = 1.0f;
-    public SkyTheme sky = SkyTheme.OFF;
+    public SkyTheme sky = SkyTheme.VOID;
     /** Intensidad del cielo de color, 0..100. */
-    public int skyStrength = 70;
+    public int skyStrength = 100;
     /** Si es true, la lluvia y las tormentas dejan de verse y oirse (solo en el cliente). */
     public boolean noRain = false;
+    /** Líneas blancas animadas sobre el cielo (solo con el tema void). */
+    public boolean skyLines = true;
+    /** Partículas claras flotando alrededor del jugador. */
+    public boolean particles = true;
+    /** Muestra la canción de Spotify que suena (solo Windows). */
+    public boolean music = true;
 
     public static VisualsConfig get() {
         return instance;
@@ -66,6 +72,9 @@ public final class VisualsConfig {
         sky = d.sky;
         skyStrength = d.skyStrength;
         noRain = d.noRain;
+        skyLines = d.skyLines;
+        particles = d.particles;
+        music = d.music;
     }
 
     private void sanitize() {

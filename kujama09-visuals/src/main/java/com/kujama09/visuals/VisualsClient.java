@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
@@ -25,6 +26,8 @@ public final class VisualsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         VisualsConfig.load();
+        SpotifyReader.start();
+        ClientTickEvents.END_CLIENT_TICK.register(ParticleSpawner::tick);
 
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT,
                 Identifier.of(MOD_ID, "hud"),
@@ -38,6 +41,9 @@ public final class VisualsClient implements ClientModInitializer {
             root.then(toggle("keys", (c, v) -> c.keystrokes = v));
             root.then(toggle("xyz", (c, v) -> c.coords = v));
             root.then(toggle("cps", (c, v) -> c.cps = v));
+            root.then(toggle("music", (c, v) -> c.music = v));
+            root.then(toggle("particles", (c, v) -> c.particles = v));
+            root.then(toggle("lines", (c, v) -> c.skyLines = v));
 
             root.then(ClientCommandManager.literal("scale")
                     .then(ClientCommandManager.argument("valor", IntegerArgumentType.integer(1, 3))
@@ -92,8 +98,8 @@ public final class VisualsClient implements ClientModInitializer {
 
             root.executes(ctx -> {
                 ctx.getSource().sendFeedback(Text.literal(
-                        "[kv] /kv hud|bar|keys|xyz|cps  |  /kv scale 1-3  |  /kv rain off|on  |  "
-                                + "/kv sky off|red|aurora|purple|fire  |  /kv sky strength 0-100  |  /kv reset"));
+                        "[kv] /kv hud|bar|keys|xyz|cps|music|particles|lines  |  /kv scale 1-3  |  /kv rain off|on  |  "
+                                + "/kv sky void|off|red|aurora|purple|fire  |  /kv sky strength 0-100  |  /kv reset"));
                 return 1;
             });
 
@@ -123,6 +129,9 @@ public final class VisualsClient implements ClientModInitializer {
             case "keys" -> c.keystrokes;
             case "xyz" -> c.coords;
             case "cps" -> c.cps;
+            case "music" -> c.music;
+            case "particles" -> c.particles;
+            case "lines" -> c.skyLines;
             default -> false;
         };
     }

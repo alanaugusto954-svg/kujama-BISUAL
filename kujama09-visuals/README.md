@@ -1,36 +1,45 @@
 # kujama09 visuals
 
-Mod de Fabric (solo cliente) para **Minecraft 1.21.11**. Es independiente de `kujama09` (intro y menú):
-se pueden usar los dos juntos o por separado.
+Mod de Fabric (solo cliente) para **Minecraft 1.21.11**, independiente de `kujama09` (intro y menú).
+Pensado para un look limpio y oscuro: cielo negro con líneas, partículas claras, HUD minimalista y la música
+de Spotify en pantalla.
 
-> **Estado:** escrito sin poder compilarlo (el entorno de creación no llega a `maven.fabricmc.net`).
-> Compilalo con GitHub Actions (el repo ya trae `.github/workflows/build.yml`) o con `./gradlew build`.
-> Nota: Loom 1.18 necesita JDK 25 para compilar.
-El JAR queda en `build/libs/kujama09-visuals-1.0.0.jar`. Ponelo en la carpeta `mods`, junto a Fabric API.
+> **Estado:** escrito sin poder compilarlo localmente. Se compila con GitHub Actions (ver `main.yml`) o con
+> `./gradlew build` (necesita JDK 25). El JAR queda en `build/libs/kujama09-visuals-1.0.0.jar` (no uses el `-sources`).
+> Ponelo en la carpeta `mods`, junto a Fabric API.
 
 ## Qué incluye
 
-- **HUD**: barra superior (nombre, FPS, hora), teclas W A S D y SPACE que se resaltan al apretarlas,
-  coordenadas XYZ y contador de CPS (clic izquierdo | derecho).
-- **Quitar lluvia**: `/kv rain off` oculta la lluvia, su sonido y el oscurecimiento de las tormentas. El clima
-  del servidor/mundo no cambia, solo lo que ves y oís.
-- **Cielo de colores**: rojo, aurora, púrpura y fuego. Tiñe la niebla/horizonte (mixin opcional) y agrega un
-  degradado de color en la parte alta de la pantalla. El domo del cielo de Minecraft no se reemplaza, así que el
-  efecto es una atmósfera de color, no un cielo nuevo.
+- **Cielo custom (`/kv sky void`, por defecto):** domo negro + líneas blancas animadas que siguen la cámara.
+  Minecraft no deja reemplazar el cielo del Overworld con una textura, así que las líneas son una capa 2D con
+  parallax, recortada en el horizonte. Funciona mejor en terreno abierto. Solo en el Overworld y con cielo visible.
+- **Partículas custom:** destellos y hojas pálidas flotando alrededor tuyo (solo visual, no afectan al servidor).
+- **Espada custom:** reemplaza la textura de la espada de netherite por una hoja oscura con filo violeta.
+- **HUD limpio:** FPS arriba al centro, hora, coordenadas, teclas W A S D + LMB/RMB y CPS, sin paneles pesados.
+- **Música de Spotify (solo Windows):** muestra título y artista en una tarjeta arriba. Lee el título de la ventana
+  de la app de escritorio de Spotify con PowerShell cada 3 s; todo es local, no usa internet ni tu cuenta. No muestra
+  portada ni progreso (esos datos no están en el título de la ventana). Solo aparece mientras suena una canción.
+- **Quitar lluvia:** `/kv rain off`, solo visual.
+- Otros cielos de color: `red`, `aurora`, `purple`, `fire`.
 
-## Controles (comando `/kv` dentro del juego)
+## Comandos (`/kv`)
 
 | Comando | Qué hace |
 |---|---|
-| `/kv hud` `/kv bar` `/kv keys` `/kv xyz` `/kv cps` | activa o desactiva el HUD completo o cada parte |
+| `/kv hud` `bar` `keys` `xyz` `cps` | activa o desactiva el HUD completo o cada parte |
+| `/kv music` | muestra u oculta la tarjeta de Spotify |
+| `/kv particles` | activa o desactiva las partículas |
+| `/kv lines` | activa o desactiva las líneas del cielo |
+| `/kv sky void\|off\|red\|aurora\|purple\|fire` | elige el cielo (`off` = cielo normal) |
+| `/kv sky strength 0-100` | intensidad del cielo |
 | `/kv scale 1-3` | tamaño del HUD |
-| `/kv sky off\|red\|aurora\|purple\|fire` | elige el cielo |
-| `/kv sky strength 0-100` | intensidad del cielo de color |
-| `/kv rain off\|on` | quita la lluvia y las tormentas (solo visual, no cambia el clima real) |
+| `/kv rain off\|on` | quita o devuelve la lluvia (solo visual) |
 | `/kv reset` | restaura los valores |
 
-Las opciones se guardan en `config/kujama09_visuals.json`.
+Las opciones se guardan en `config/kujama09_visuals.json`. Si ya existía ese archivo de una versión anterior,
+usá `/kv reset` para tomar los valores nuevos.
 
 ## Lo que NO incluye
 
-Alas, modelo de jugador translúcido, anillos en el suelo y las funciones de combate del cliente del video.
+Alas, modelo de jugador translúcido, anillos en el suelo, el efecto de dinero, TNT custom y las funciones de
+combate del cliente del video.
