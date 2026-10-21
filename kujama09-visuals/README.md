@@ -11,6 +11,8 @@ se pueden usar los dos juntos o por separado.
 
 - **HUD**: barra superior (nombre, FPS, hora), teclas W A S D y SPACE que se resaltan al apretarlas,
   coordenadas XYZ y contador de CPS (clic izquierdo | derecho).
+- **Quitar lluvia**: `/kv rain off` oculta la lluvia, su sonido y el oscurecimiento de las tormentas. El clima
+  del servidor/mundo no cambia, solo lo que ves y oís.
 - **Cielo de colores**: rojo, aurora, púrpura y fuego. Tiñe la niebla/horizonte (mixin opcional) y agrega un
   degradado de color en la parte alta de la pantalla. El domo del cielo de Minecraft no se reemplaza, así que el
   efecto es una atmósfera de color, no un cielo nuevo.
@@ -23,6 +25,7 @@ se pueden usar los dos juntos o por separado.
 | `/kv scale 1-3` | tamaño del HUD |
 | `/kv sky off\|red\|aurora\|purple\|fire` | elige el cielo |
 | `/kv sky strength 0-100` | intensidad del cielo de color |
+| `/kv rain off\|on` | quita la lluvia y las tormentas (solo visual, no cambia el clima real) |
 | `/kv reset` | restaura los valores |
 
 Las opciones se guardan en `config/kujama09_visuals.json`.

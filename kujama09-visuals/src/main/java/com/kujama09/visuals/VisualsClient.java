@@ -69,6 +69,20 @@ public final class VisualsClient implements ClientModInitializer {
                             })));
             root.then(sky);
 
+            root.then(ClientCommandManager.literal("rain")
+                    .then(ClientCommandManager.literal("off").executes(ctx -> {
+                        VisualsConfig.get().noRain = true;
+                        VisualsConfig.save();
+                        ctx.getSource().sendFeedback(Text.literal("[kv] Lluvia quitada (solo visual)"));
+                        return 1;
+                    }))
+                    .then(ClientCommandManager.literal("on").executes(ctx -> {
+                        VisualsConfig.get().noRain = false;
+                        VisualsConfig.save();
+                        ctx.getSource().sendFeedback(Text.literal("[kv] Lluvia normal"));
+                        return 1;
+                    })));
+
             root.then(ClientCommandManager.literal("reset").executes(ctx -> {
                 VisualsConfig.get().resetToDefaults();
                 VisualsConfig.save();
@@ -78,7 +92,7 @@ public final class VisualsClient implements ClientModInitializer {
 
             root.executes(ctx -> {
                 ctx.getSource().sendFeedback(Text.literal(
-                        "[kv] /kv hud|bar|keys|xyz|cps  |  /kv scale 1-3  |  "
+                        "[kv] /kv hud|bar|keys|xyz|cps  |  /kv scale 1-3  |  /kv rain off|on  |  "
                                 + "/kv sky off|red|aurora|purple|fire  |  /kv sky strength 0-100  |  /kv reset"));
                 return 1;
             });

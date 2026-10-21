@@ -25,6 +25,8 @@ public final class VisualsConfig {
     public SkyTheme sky = SkyTheme.OFF;
     /** Intensidad del cielo de color, 0..100. */
     public int skyStrength = 70;
+    /** Si es true, la lluvia y las tormentas dejan de verse y oirse (solo en el cliente). */
+    public boolean noRain = false;
 
     public static VisualsConfig get() {
         return instance;
@@ -63,6 +65,7 @@ public final class VisualsConfig {
         hudScale = d.hudScale;
         sky = d.sky;
         skyStrength = d.skyStrength;
+        noRain = d.noRain;
     }
 
     private void sanitize() {
