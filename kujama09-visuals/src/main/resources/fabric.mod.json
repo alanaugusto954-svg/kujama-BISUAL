@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "kujama09_visuals",
+  "version": "${version}",
+  "name": "kujama09 visuals",
+  "description": "HUD (FPS, hora, teclas, coordenadas, CPS) y cielos de colores para Minecraft.",
+  "authors": [
+    "kujama09"
+  ],
+  "license": "All-Rights-Reserved",
+  "icon": "assets/kujama09_visuals/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.kujama09.visuals.VisualsClient"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "kujama09_visuals.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

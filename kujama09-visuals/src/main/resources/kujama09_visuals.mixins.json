@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.kujama09.visuals.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "FogRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}
