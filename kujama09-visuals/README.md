@@ -5,7 +5,8 @@ se pueden usar los dos juntos o por separado.
 
 > **Estado:** escrito sin poder compilarlo (el entorno de creación no llega a `maven.fabricmc.net`).
 > Compilalo con GitHub Actions (el repo ya trae `.github/workflows/build.yml`) o con `./gradlew build`.
-> El JAR queda en `build/libs/kujama09-visuals-1.0.0.jar`. Ponelo en la carpeta `mods`, junto a Fabric API.
+> Nota: Loom 1.18 necesita JDK 25 para compilar.
+El JAR queda en `build/libs/kujama09-visuals-1.0.0.jar`. Ponelo en la carpeta `mods`, junto a Fabric API.
 
 ## Qué incluye
 
