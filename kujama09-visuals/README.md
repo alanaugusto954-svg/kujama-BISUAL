@@ -14,7 +14,6 @@ de Spotify en pantalla.
   Minecraft no deja reemplazar el cielo del Overworld con una textura, así que las líneas son una capa 2D con
   parallax, recortada en el horizonte. Funciona mejor en terreno abierto. Solo en el Overworld y con cielo visible.
 - **Partículas custom:** destellos y hojas pálidas flotando alrededor tuyo (solo visual, no afectan al servidor).
-- **Espada custom:** reemplaza la textura de la espada de netherite por una hoja oscura con filo violeta.
 - **HUD limpio:** FPS arriba al centro, hora, coordenadas, teclas W A S D + LMB/RMB y CPS, sin paneles pesados.
 - **Música de Spotify (solo Windows):** muestra título y artista en una tarjeta arriba. Lee el título de la ventana
   de la app de escritorio de Spotify con PowerShell cada 3 s; todo es local, no usa internet ni tu cuenta. No muestra
