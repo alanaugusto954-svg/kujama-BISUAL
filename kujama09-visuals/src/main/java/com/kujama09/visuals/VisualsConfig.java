@@ -33,6 +33,16 @@ public final class VisualsConfig {
     public boolean particles = true;
     /** Muestra la canción de Spotify que suena (solo Windows). */
     public boolean music = true;
+    /** Tema de color de la interfaz (ver Theme). */
+    public String theme = "amethyst";
+    /** Fullbright: brillo por encima del máximo normal. */
+    public boolean fullbright = false;
+    /** Nivel de brillo del fullbright (2 a 15). */
+    public float fullbrightLevel = 12.0f;
+    /** Panel con las funciones activas, arriba a la derecha. */
+    public boolean modulesPanel = true;
+    /** Panel con la tecla del menú. */
+    public boolean keybindsPanel = true;
 
     public static VisualsConfig get() {
         return instance;
@@ -75,6 +85,11 @@ public final class VisualsConfig {
         skyLines = d.skyLines;
         particles = d.particles;
         music = d.music;
+        theme = d.theme;
+        fullbright = d.fullbright;
+        fullbrightLevel = d.fullbrightLevel;
+        modulesPanel = d.modulesPanel;
+        keybindsPanel = d.keybindsPanel;
     }
 
     private void sanitize() {
@@ -82,5 +97,8 @@ public final class VisualsConfig {
         hudScale = Math.max(1.0f, Math.min(3.0f, hudScale));
         skyStrength = Math.max(0, Math.min(100, skyStrength));
         if (sky == null) sky = SkyTheme.OFF;
+        if (theme == null) theme = "amethyst";
+        if (Float.isNaN(fullbrightLevel)) fullbrightLevel = 12.0f;
+        fullbrightLevel = Math.max(2.0f, Math.min(15.0f, fullbrightLevel));
     }
 }

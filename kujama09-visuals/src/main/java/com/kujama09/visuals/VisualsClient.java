@@ -28,6 +28,10 @@ public final class VisualsClient implements ClientModInitializer {
         VisualsConfig.load();
         SpotifyReader.start();
         ClientTickEvents.END_CLIENT_TICK.register(ParticleSpawner::tick);
+        ClientTickEvents.END_CLIENT_TICK.register(Fullbright::tick);
+        ClientTickEvents.END_CLIENT_TICK.register(VisualsClient::pollMenuKey);
+        net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents.CLIENT_STOPPING
+                .register(Fullbright::restore);
 
         HudElementRegistry.attachElementBefore(VanillaHudElements.CHAT,
                 Identifier.of(MOD_ID, "hud"),
@@ -44,6 +48,26 @@ public final class VisualsClient implements ClientModInitializer {
             root.then(toggle("music", (c, v) -> c.music = v));
             root.then(toggle("particles", (c, v) -> c.particles = v));
             root.then(toggle("lines", (c, v) -> c.skyLines = v));
+            root.then(toggle("fullbright", (c, v) -> c.fullbright = v));
+            root.then(toggle("modules", (c, v) -> c.modulesPanel = v));
+            root.then(toggle("keybinds", (c, v) -> c.keybindsPanel = v));
+
+            root.then(ClientCommandManager.literal("menu").executes(ctx -> {
+                net.minecraft.client.MinecraftClient.getInstance()
+                        .send(() -> net.minecraft.client.MinecraftClient.getInstance().setScreen(new MenuScreen()));
+                return 1;
+            }));
+
+            LiteralArgumentBuilder<FabricClientCommandSource> themeCmd = ClientCommandManager.literal("theme");
+            for (Theme t : Theme.values()) {
+                themeCmd.then(ClientCommandManager.literal(t.id).executes(ctx -> {
+                    VisualsConfig.get().theme = t.id;
+                    VisualsConfig.save();
+                    ctx.getSource().sendFeedback(Text.literal("[kv] Tema: " + t.label));
+                    return 1;
+                }));
+            }
+            root.then(themeCmd);
 
             root.then(ClientCommandManager.literal("scale")
                     .then(ClientCommandManager.argument("valor", IntegerArgumentType.integer(1, 3))
@@ -132,7 +156,25 @@ public final class VisualsClient implements ClientModInitializer {
             case "music" -> c.music;
             case "particles" -> c.particles;
             case "lines" -> c.skyLines;
+            case "fullbright" -> c.fullbright;
+            case "modules" -> c.modulesPanel;
+            case "keybinds" -> c.keybindsPanel;
             default -> false;
         };
+    }
+
+    private static boolean shiftWasDown;
+
+    /** Abre el menú con Right Shift (flanco de subida, solo si no hay otra pantalla abierta). */
+    private static void pollMenuKey(net.minecraft.client.MinecraftClient client) {
+        if (client.getWindow() == null) {
+            return;
+        }
+        boolean down = org.lwjgl.glfw.GLFW.glfwGetKey(client.getWindow().getHandle(),
+                org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_SHIFT) == org.lwjgl.glfw.GLFW.GLFW_PRESS;
+        if (down && !shiftWasDown && client.currentScreen == null && client.player != null) {
+            client.setScreen(new MenuScreen());
+        }
+        shiftWasDown = down;
     }
 }

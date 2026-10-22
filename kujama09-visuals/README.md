@@ -43,3 +43,9 @@ usá `/kv reset` para tomar los valores nuevos.
 
 Alas, modelo de jugador translúcido, anillos en el suelo, el efecto de dinero, TNT custom y las funciones de
 combate del cliente del video.
+
+## Novedades 1.1.0
+- **Menu** con Right Shift (o `/kv menu`): pestanas Visual, World, Themes y Settings.
+- **Temas de color** (16): `/kv theme <nombre>` o desde la pestana Themes.
+- **Fullbright**: `/kv fullbright` o en World (nivel 2-15). Algunos servidores lo prohiben.
+- **HUD nuevo**: barra superior, panel XYZ, Modules y KeyBinds (`/kv modules`, `/kv keybinds`).

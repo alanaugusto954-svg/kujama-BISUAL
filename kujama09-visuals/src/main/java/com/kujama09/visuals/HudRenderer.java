@@ -53,22 +53,25 @@ public final class HudRenderer {
         matrices.pushMatrix();
         matrices.scale(scale, scale);
 
+        Theme theme = Theme.current();
         if (cfg.topBar) {
-            String fps = "FPS: " + mc.getCurrentFps();
-            context.drawText(font, fps, (vw - font.getWidth(fps)) / 2, 4, TEXT, true);
-            String time = LocalTime.now().format(CLOCK);
-            context.drawText(font, time, vw - font.getWidth(time) - 6, 6, TEXT, true);
-        }
-
-        if (cfg.music && SpotifyReader.isPlaying()) {
-            drawMusic(context, font, vw / 2 - 80, cfg.topBar ? 17 : 6);
+            drawTopBar(context, font, mc, theme, vw);
         }
 
         if (cfg.coords) {
             String xyz = String.format(Locale.ROOT, "%.1f, %.1f, %.1f",
                     mc.player.getX(), mc.player.getY(), mc.player.getZ());
-            context.drawText(font, xyz, 6, 6, TEXT, true);
-            context.drawText(font, "Visuals by kujama09", 6, 17, DIM, true);
+            String label = "XYZ";
+            int w = font.getWidth(label) + font.getWidth(xyz) + 22;
+            Ui.panel(context, 6, 6, 6 + w, 22, 5, 0xB0101016, Ui.alpha(theme.accent, 0.55f));
+            context.drawText(font, label, 12, 11, theme.accent, true);
+            context.drawText(font, xyz, 12 + font.getWidth(label) + 8, 11, TEXT, true);
+        }
+
+        drawSidePanels(context, font, cfg, theme, vw);
+
+        if (cfg.music && SpotifyReader.isPlaying()) {
+            drawMusic(context, font, theme, vw / 2 - 80, cfg.topBar ? 30 : 6);
         }
 
         if (cfg.keystrokes || cfg.cps) {
@@ -78,15 +81,82 @@ public final class HudRenderer {
         matrices.popMatrix();
     }
 
+    private static void drawTopBar(DrawContext context, TextRenderer font, MinecraftClient mc, Theme theme, int vw) {
+        String where;
+        if (mc.isInSingleplayer()) {
+            where = "Singleplayer";
+        } else if (mc.getCurrentServerEntry() != null) {
+            where = mc.getCurrentServerEntry().address;
+        } else {
+            where = "Multiplayer";
+        }
+        where = font.trimToWidth(where, 120);
+        String name = "kujama09";
+        String fps = mc.getCurrentFps() + " FPS";
+        String time = LocalTime.now().format(CLOCK);
+        int gap = 10;
+        int w = font.getWidth(name) + font.getWidth(where) + font.getWidth(fps) + font.getWidth(time) + gap * 5;
+        int x = (vw - w) / 2;
+        Ui.glow(context, x, 4, x + w, 20, 6, Ui.alpha(theme.accent, 0.6f));
+        Ui.panel(context, x, 4, x + w, 20, 6, 0xC0101016, Ui.alpha(theme.accent, 0.6f));
+        int tx = x + gap;
+        context.drawText(font, name, tx, 9, theme.accent, true);
+        tx += font.getWidth(name) + gap;
+        context.drawText(font, where, tx, 9, TEXT, true);
+        tx += font.getWidth(where) + gap;
+        context.drawText(font, fps, tx, 9, TEXT, true);
+        tx += font.getWidth(fps) + gap;
+        context.drawText(font, time, tx, 9, DIM, true);
+    }
+
+    private static void drawSidePanels(DrawContext context, TextRenderer font, VisualsConfig cfg, Theme theme, int vw) {
+        int w = 96;
+        int x = vw - w - 6;
+        int y = 6;
+        if (cfg.modulesPanel) {
+            java.util.List<String> on = new java.util.ArrayList<>();
+            if (cfg.fullbright) on.add("Fullbright");
+            if (cfg.noRain) on.add("No Rain");
+            if (cfg.sky != SkyTheme.OFF) on.add("Sky: " + Ui.capitalize(cfg.sky.id));
+            if (cfg.particles) on.add("Particles");
+            if (cfg.music) on.add("Spotify");
+            if (cfg.keystrokes) on.add("Keystrokes");
+            if (cfg.cps) on.add("CPS");
+            int h = 18 + Math.max(1, on.size()) * 11 + 3;
+            Ui.panel(context, x, y, x + w, y + h, 5, 0xB0101016, Ui.alpha(theme.accent, 0.45f));
+            context.drawText(font, "Modules", x + 8, y + 6, theme.accent, true);
+            context.fill(x + 6, y + 16, x + w - 6, y + 17, Ui.alpha(theme.accent, 0.35f));
+            int ly = y + 21;
+            if (on.isEmpty()) {
+                context.drawText(font, "none", x + 8, ly, DIM, false);
+            }
+            for (String m : on) {
+                context.fill(x + 8, ly + 3, x + 11, ly + 6, theme.accent);
+                context.drawText(font, m, x + 15, ly, TEXT, false);
+                ly += 11;
+            }
+            y += h + 5;
+        }
+        if (cfg.keybindsPanel) {
+            int h = 30;
+            Ui.panel(context, x, y, x + w, y + h, 5, 0xB0101016, Ui.alpha(theme.accent, 0.45f));
+            context.drawText(font, "KeyBinds", x + 8, y + 6, theme.accent, true);
+            context.fill(x + 6, y + 16, x + w - 6, y + 17, Ui.alpha(theme.accent, 0.35f));
+            context.drawText(font, "Menu", x + 8, y + 20, TEXT, false);
+            String key = "R-Shift";
+            context.drawText(font, key, x + w - font.getWidth(key) - 8, y + 20, DIM, false);
+        }
+    }
+
     /** Tarjeta con la canción: icono, título, artista y unas barras animadas. */
-    private static void drawMusic(DrawContext context, TextRenderer font, int x, int y) {
+    private static void drawMusic(DrawContext context, TextRenderer font, Theme theme, int x, int y) {
         int w = 160;
         int h = 28;
         context.fill(x - 1, y - 1, x + w + 1, y + h + 1, 0x24FFFFFF);
         context.fill(x, y, x + w, y + h, 0xA0101018);
 
         // Icono
-        context.fillGradient(x + 3, y + 3, x + 25, y + 25, 0xFF3B2A6B, 0xFF14101F);
+        context.fillGradient(x + 3, y + 3, x + 25, y + 25, theme.accent2, 0xFF14101F);
         context.drawText(font, "♪", x + 11, y + 10, TEXT, false);
 
         String title = font.trimToWidth(SpotifyReader.title(), w - 62);
@@ -99,7 +169,7 @@ public final class HudRenderer {
         for (int i = 0; i < 4; i++) {
             int bh = 3 + Math.round(8 * (0.5f + 0.5f * (float) Math.sin(t * (4f + i * 1.7f) + i)));
             int bx = x + w - 22 + i * 5;
-            context.fill(bx, y + 20 - bh, bx + 3, y + 20, 0xCC9B7BFF);
+            context.fill(bx, y + 20 - bh, bx + 3, y + 20, theme.accent);
         }
     }
 

@@ -6,7 +6,8 @@
   "client": [
     "FogRendererMixin",
     "WorldMixin",
-    "SkyRenderingMixin"
+    "SkyRenderingMixin",
+    "SimpleOptionAccessor"
   ],
   "injectors": {
     "defaultRequire": 0
