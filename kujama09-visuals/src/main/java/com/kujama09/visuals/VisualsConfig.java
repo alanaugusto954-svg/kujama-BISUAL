@@ -41,6 +41,12 @@ public final class VisualsConfig {
     public float fullbrightLevel = 12.0f;
     /** Panel con las funciones activas, arriba a la derecha. */
     public boolean modulesPanel = true;
+    /** Manos negras con borde de color en primera persona. */
+    public boolean hands = true;
+    /** Logo flotando en el cielo. */
+    public boolean skyLogo = false;
+    /** Tamano del logo (0 a 100). */
+    public int logoSize = 40;
     /** Panel con la tecla del menú. */
     public boolean keybindsPanel = true;
 
@@ -89,6 +95,9 @@ public final class VisualsConfig {
         fullbright = d.fullbright;
         fullbrightLevel = d.fullbrightLevel;
         modulesPanel = d.modulesPanel;
+        hands = d.hands;
+        skyLogo = d.skyLogo;
+        logoSize = d.logoSize;
         keybindsPanel = d.keybindsPanel;
     }
 
@@ -98,6 +107,7 @@ public final class VisualsConfig {
         skyStrength = Math.max(0, Math.min(100, skyStrength));
         if (sky == null) sky = SkyTheme.OFF;
         if (theme == null) theme = "amethyst";
+        logoSize = Math.max(0, Math.min(100, logoSize));
         if (Float.isNaN(fullbrightLevel)) fullbrightLevel = 12.0f;
         fullbrightLevel = Math.max(2.0f, Math.min(15.0f, fullbrightLevel));
     }
