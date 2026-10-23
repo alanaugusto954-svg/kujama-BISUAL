@@ -1,4 +1,4 @@
-name: Build kujama09-visuals
+name: Build mods
 
 on:
   push:
@@ -11,9 +11,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - kujama09-visuals
+          - kujama09-hands
     defaults:
       run:
-        working-directory: kujama09-visuals
+        working-directory: ${{ matrix.project }}
     steps:
       - name: Descargar el codigo
         uses: actions/checkout@v4
@@ -33,5 +39,5 @@ jobs:
       - name: Subir el JAR
         uses: actions/upload-artifact@v4
         with:
-          name: kujama09-visuals-jar
-          path: kujama09-visuals/build/libs/*.jar
+          name: ${{ matrix.project }}-jar
+          path: ${{ matrix.project }}/build/libs/*.jar
