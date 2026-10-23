@@ -48,3 +48,7 @@ combate del cliente del video.
 - **Temas de color** (16): `/kv theme <nombre>` o desde la pestana Themes.
 - **Fullbright**: `/kv fullbright` o en World (nivel 2-15). Algunos servidores lo prohiben.
 - **HUD nuevo**: barra superior, panel XYZ, Modules y KeyBinds (`/kv modules`, `/kv keybinds`).
+
+## Novedades 1.2.0
+- **Manos negras** en primera persona con borde del color del tema (`/kv hands`).
+- **Logo en el cielo** (`/kv logo`, tamano en el menu). Por defecto es el zorro de kujama09. Para usar tu propia imagen, guardala como `config/kujama09_visuals/logo.png` y ejecuta `/kv logo reload`.
