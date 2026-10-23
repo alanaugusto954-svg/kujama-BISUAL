@@ -7,8 +7,7 @@
     "FogRendererMixin",
     "WorldMixin",
     "SkyRenderingMixin",
-    "SimpleOptionAccessor",
-    "HandsMixin"
+    "SimpleOptionAccessor"
   ],
   "injectors": {
     "defaultRequire": 0

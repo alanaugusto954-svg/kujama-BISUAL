@@ -49,20 +49,6 @@ public final class VisualsClient implements ClientModInitializer {
             root.then(toggle("particles", (c, v) -> c.particles = v));
             root.then(toggle("lines", (c, v) -> c.skyLines = v));
             root.then(toggle("fullbright", (c, v) -> c.fullbright = v));
-            root.then(toggle("hands", (c, v) -> c.hands = v));
-            root.then(ClientCommandManager.literal("logo")
-                    .executes(ctx -> {
-                        VisualsConfig cfg = VisualsConfig.get();
-                        cfg.skyLogo = !cfg.skyLogo;
-                        VisualsConfig.save();
-                        ctx.getSource().sendFeedback(Text.literal("[kv] logo: " + (cfg.skyLogo ? "ON" : "OFF")));
-                        return 1;
-                    })
-                    .then(ClientCommandManager.literal("reload").executes(ctx -> {
-                        SkyLogo.reload();
-                        ctx.getSource().sendFeedback(Text.literal("[kv] Logo recargado. Tu imagen: " + SkyLogo.file()));
-                        return 1;
-                    })));
             root.then(toggle("modules", (c, v) -> c.modulesPanel = v));
             root.then(toggle("keybinds", (c, v) -> c.keybindsPanel = v));
 
@@ -171,7 +157,6 @@ public final class VisualsClient implements ClientModInitializer {
             case "particles" -> c.particles;
             case "lines" -> c.skyLines;
             case "fullbright" -> c.fullbright;
-            case "hands" -> c.hands;
             case "modules" -> c.modulesPanel;
             case "keybinds" -> c.keybindsPanel;
             default -> false;

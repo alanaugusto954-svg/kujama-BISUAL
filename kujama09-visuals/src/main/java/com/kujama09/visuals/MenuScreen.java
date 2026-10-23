@@ -177,7 +177,6 @@ public final class MenuScreen extends Screen {
                 cy = toggleRow(k, cy, "Panel de modulos", cfg.modulesPanel, () -> cfg.modulesPanel = !cfg.modulesPanel);
                 cy = toggleRow(k, cy, "Panel de teclas", cfg.keybindsPanel, () -> cfg.keybindsPanel = !cfg.keybindsPanel);
                 cy = toggleRow(k, cy, "Particulas", cfg.particles, () -> cfg.particles = !cfg.particles);
-                cy = toggleRow(k, cy, "Manos negras", cfg.hands, () -> cfg.hands = !cfg.hands);
                 sliderRow(k, cy, "Tamano HUD", (cfg.hudScale - 1) / 2f, "x" + cfg.hudScale,
                         f -> cfg.hudScale = 1 + Math.round(f * 2f));
             }
@@ -187,9 +186,6 @@ public final class MenuScreen extends Screen {
                         Math.round(cfg.fullbrightLevel) + "", f -> cfg.fullbrightLevel = 2f + Math.round(f * 13f));
                 cy = toggleRow(k, cy, "Quitar lluvia", cfg.noRain, () -> cfg.noRain = !cfg.noRain);
                 cy = toggleRow(k, cy, "Lineas del cielo", cfg.skyLines, () -> cfg.skyLines = !cfg.skyLines);
-                cy = toggleRow(k, cy, "Logo en el cielo", cfg.skyLogo, () -> cfg.skyLogo = !cfg.skyLogo);
-                cy = sliderRow(k, cy, "Tamano logo", cfg.logoSize / 100f, cfg.logoSize + "%",
-                        f -> cfg.logoSize = Math.round(f * 100f));
                 cy = sliderRow(k, cy, "Intensidad cielo", cfg.skyStrength / 100f, cfg.skyStrength + "%",
                         f -> cfg.skyStrength = Math.round(f * 100f));
                 c.drawText(font, "Cielo", cx, cy + 3, Ui.alpha(0xFFA0A4B0, ease), false);

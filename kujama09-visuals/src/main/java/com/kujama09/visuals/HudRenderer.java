@@ -39,8 +39,6 @@ public final class HudRenderer {
             context.fillGradient(0, 0, width, Math.round(height * 0.55f), cfg.sky.argb(alpha), cfg.sky.argb(0));
         }
 
-        SkyLogo.render(context, mc, width, height, cfg);
-
         CpsCounter.poll(mc.getWindow().getHandle(), mc.currentScreen == null);
 
         if (!cfg.hud) {
@@ -118,8 +116,6 @@ public final class HudRenderer {
         if (cfg.modulesPanel) {
             java.util.List<String> on = new java.util.ArrayList<>();
             if (cfg.fullbright) on.add("Fullbright");
-            if (cfg.hands) on.add("Hands");
-            if (cfg.skyLogo) on.add("Sky Logo");
             if (cfg.noRain) on.add("No Rain");
             if (cfg.sky != SkyTheme.OFF) on.add("Sky: " + Ui.capitalize(cfg.sky.id));
             if (cfg.particles) on.add("Particles");
