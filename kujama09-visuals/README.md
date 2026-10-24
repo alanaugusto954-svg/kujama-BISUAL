@@ -56,3 +56,7 @@ combate del cliente del video.
 ## Novedades 1.3.0
 - **Cielos realistas** (`/kv sky storm|overcast|dusk`): tormenta, nublado y atardecer. Conservan el ciclo dia/noche.
 - **Truenos en las nubes** (`/kv thunder`): destellos y ramas dentro de las nubes, sin rayos que caigan al suelo. `/kv thunderrate 0-100` y `/kv thundersound` para frecuencia y sonido. Todo desde la pestana Sky del menu.
+- 1.3.1: antes de cada trueno, las nubes se iluminan de a poco con parpadeos irregulares (carga previa) y despues vienen los destellos.
+
+## Novedades 1.4.0
+- **Portada del album** en la tarjeta de Spotify (`/kv cover`). Se pide al control de medios de Windows solo cuando cambia la cancion; todo local. Si Windows no la entrega, queda el icono de nota.

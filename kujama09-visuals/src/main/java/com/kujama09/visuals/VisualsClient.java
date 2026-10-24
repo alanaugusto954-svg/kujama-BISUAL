@@ -51,6 +51,7 @@ public final class VisualsClient implements ClientModInitializer {
             root.then(toggle("fullbright", (c, v) -> c.fullbright = v));
             root.then(toggle("hands", (c, v) -> c.hands = v));
             root.then(toggle("thunder", (c, v) -> c.thunder = v));
+            root.then(toggle("cover", (c, v) -> c.musicCover = v));
             root.then(toggle("thundersound", (c, v) -> c.thunderSound = v));
             root.then(ClientCommandManager.literal("thunderrate")
                     .then(ClientCommandManager.argument("valor", IntegerArgumentType.integer(0, 100))
@@ -184,6 +185,7 @@ public final class VisualsClient implements ClientModInitializer {
             case "fullbright" -> c.fullbright;
             case "hands" -> c.hands;
             case "thunder" -> c.thunder;
+            case "cover" -> c.musicCover;
             case "thundersound" -> c.thunderSound;
             case "modules" -> c.modulesPanel;
             case "keybinds" -> c.keybindsPanel;

@@ -44,6 +44,8 @@ public final class VisualsConfig {
     /** Manos negras con borde de color en primera persona. */
     public boolean hands = true;
     /** Truenos dentro de las nubes (destellos, sin rayos al suelo). */
+    /** Muestra la portada del album en la tarjeta de Spotify. */
+    public boolean musicCover = true;
     public boolean thunder = false;
     /** Frecuencia de los truenos (0 a 100). */
     public int thunderRate = 50;
@@ -103,6 +105,7 @@ public final class VisualsConfig {
         modulesPanel = d.modulesPanel;
         hands = d.hands;
         thunder = d.thunder;
+        musicCover = d.musicCover;
         thunderRate = d.thunderRate;
         thunderSound = d.thunderSound;
         skyLogo = d.skyLogo;

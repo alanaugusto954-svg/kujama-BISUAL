@@ -174,6 +174,7 @@ public final class MenuScreen extends Screen {
                     cfg.cps = v;
                 });
                 cy = toggleRow(k, cy, "Spotify", cfg.music, () -> cfg.music = !cfg.music);
+                cy = toggleRow(k, cy, "Portada Spotify", cfg.musicCover, () -> cfg.musicCover = !cfg.musicCover);
                 cy = toggleRow(k, cy, "Panel de modulos", cfg.modulesPanel, () -> cfg.modulesPanel = !cfg.modulesPanel);
                 cy = toggleRow(k, cy, "Panel de teclas", cfg.keybindsPanel, () -> cfg.keybindsPanel = !cfg.keybindsPanel);
                 cy = toggleRow(k, cy, "Particulas", cfg.particles, () -> cfg.particles = !cfg.particles);

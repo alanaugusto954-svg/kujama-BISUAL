@@ -162,8 +162,14 @@ public final class HudRenderer {
         context.fill(x, y, x + w, y + h, 0xA0101018);
 
         // Icono
-        context.fillGradient(x + 3, y + 3, x + 25, y + 25, theme.accent2, 0xFF14101F);
-        context.drawText(font, "♪", x + 11, y + 10, TEXT, false);
+        net.minecraft.util.Identifier cover = SpotifyCover.get();
+        if (cover != null) {
+            context.drawTexture(net.minecraft.client.gl.RenderPipelines.GUI_TEXTURED, cover, x + 3, y + 3,
+                    0f, 0f, 22, 22, 64, 64, 64, 64, 0xFFFFFFFF);
+        } else {
+            context.fillGradient(x + 3, y + 3, x + 25, y + 25, theme.accent2, 0xFF14101F);
+            context.drawText(font, "♪", x + 11, y + 10, TEXT, false);
+        }
 
         String title = font.trimToWidth(SpotifyReader.title(), w - 62);
         String artist = font.trimToWidth(SpotifyReader.artist(), w - 62);
