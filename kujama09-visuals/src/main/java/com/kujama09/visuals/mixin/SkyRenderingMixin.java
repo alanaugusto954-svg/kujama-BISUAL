@@ -22,9 +22,19 @@ public abstract class SkyRenderingMixin {
         }
         float s = cfg.skyStrength / 100f;
         int a = color & 0xFF000000;
-        int r = blend((color >> 16) & 0xFF, cfg.sky.r, s);
-        int g = blend((color >> 8) & 0xFF, cfg.sky.g, s);
-        int b = blend(color & 0xFF, cfg.sky.b, s);
+        int tr = cfg.sky.r;
+        int tg = cfg.sky.g;
+        int tb = cfg.sky.b;
+        if (cfg.sky.realistic) {
+            int max = Math.max((color >> 16) & 0xFF, Math.max((color >> 8) & 0xFF, color & 0xFF));
+            float light = Math.max(0f, Math.min(1f, max / 255f));
+            tr = Math.round(tr * light);
+            tg = Math.round(tg * light);
+            tb = Math.round(tb * light);
+        }
+        int r = blend((color >> 16) & 0xFF, tr, s);
+        int g = blend((color >> 8) & 0xFF, tg, s);
+        int b = blend(color & 0xFF, tb, s);
         return a | (r << 16) | (g << 8) | b;
     }
 

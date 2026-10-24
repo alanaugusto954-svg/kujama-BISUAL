@@ -34,10 +34,13 @@ public final class HudRenderer {
             if (cfg.skyLines) {
                 SkyOverlay.render(context, mc, width, height, cfg.skyStrength);
             }
-        } else if (cfg.sky != SkyTheme.OFF && cfg.skyStrength > 0) {
+        } else if (cfg.sky != SkyTheme.OFF && !cfg.sky.realistic && cfg.skyStrength > 0) {
             int alpha = Math.round(0x70 * (cfg.skyStrength / 100f));
             context.fillGradient(0, 0, width, Math.round(height * 0.55f), cfg.sky.argb(alpha), cfg.sky.argb(0));
         }
+
+        Thunder.render(context, mc, width, height, cfg);
+        SkyLogo.render(context, mc, width, height, cfg);
 
         CpsCounter.poll(mc.getWindow().getHandle(), mc.currentScreen == null);
 
@@ -116,6 +119,9 @@ public final class HudRenderer {
         if (cfg.modulesPanel) {
             java.util.List<String> on = new java.util.ArrayList<>();
             if (cfg.fullbright) on.add("Fullbright");
+            if (cfg.hands) on.add("Hands");
+            if (cfg.thunder) on.add("Thunder");
+            if (cfg.skyLogo) on.add("Sky Logo");
             if (cfg.noRain) on.add("No Rain");
             if (cfg.sky != SkyTheme.OFF) on.add("Sky: " + Ui.capitalize(cfg.sky.id));
             if (cfg.particles) on.add("Particles");

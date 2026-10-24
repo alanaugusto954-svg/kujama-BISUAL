@@ -31,6 +31,14 @@ public abstract class FogRendererMixin {
             return;
         }
         float s = cfg.skyStrength / 100f;
+        if (cfg.sky.realistic) {
+            // Conserva la luz del día: de noche el cielo sigue oscuro.
+            float light = Math.max(0f, Math.min(1f, Math.max(color.x, Math.max(color.y, color.z)) / 0.85f));
+            color.x = color.x + (cfg.sky.r / 255f * light - color.x) * s;
+            color.y = color.y + (cfg.sky.g / 255f * light - color.y) * s;
+            color.z = color.z + (cfg.sky.b / 255f * light - color.z) * s;
+            return;
+        }
         color.x = color.x + (cfg.sky.r / 255f - color.x) * s;
         color.y = color.y + (cfg.sky.g / 255f - color.y) * s;
         color.z = color.z + (cfg.sky.b / 255f - color.z) * s;

@@ -43,6 +43,12 @@ public final class VisualsConfig {
     public boolean modulesPanel = true;
     /** Manos negras con borde de color en primera persona. */
     public boolean hands = true;
+    /** Truenos dentro de las nubes (destellos, sin rayos al suelo). */
+    public boolean thunder = false;
+    /** Frecuencia de los truenos (0 a 100). */
+    public int thunderRate = 50;
+    /** Sonido de trueno lejano. */
+    public boolean thunderSound = true;
     /** Logo flotando en el cielo. */
     public boolean skyLogo = false;
     /** Tamano del logo (0 a 100). */
@@ -96,6 +102,9 @@ public final class VisualsConfig {
         fullbrightLevel = d.fullbrightLevel;
         modulesPanel = d.modulesPanel;
         hands = d.hands;
+        thunder = d.thunder;
+        thunderRate = d.thunderRate;
+        thunderSound = d.thunderSound;
         skyLogo = d.skyLogo;
         logoSize = d.logoSize;
         keybindsPanel = d.keybindsPanel;
@@ -108,6 +117,7 @@ public final class VisualsConfig {
         if (sky == null) sky = SkyTheme.OFF;
         if (theme == null) theme = "amethyst";
         logoSize = Math.max(0, Math.min(100, logoSize));
+        thunderRate = Math.max(0, Math.min(100, thunderRate));
         if (Float.isNaN(fullbrightLevel)) fullbrightLevel = 12.0f;
         fullbrightLevel = Math.max(2.0f, Math.min(15.0f, fullbrightLevel));
     }

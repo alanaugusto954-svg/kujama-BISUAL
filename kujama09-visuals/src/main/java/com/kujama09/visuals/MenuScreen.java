@@ -17,7 +17,7 @@ import java.util.function.Consumer;
  * clicables. Pestañas: Visual, World, Themes y Settings.
  */
 public final class MenuScreen extends Screen {
-    private static final String[] TABS = {"Visual", "World", "Themes", "Settings"};
+    private static final String[] TABS = {"Visual", "World", "Sky", "Themes", "Settings"};
     private static int lastTab = 0;
 
     private record Hit(int x1, int y1, int x2, int y2, Runnable action) {
@@ -116,7 +116,7 @@ public final class MenuScreen extends Screen {
         c.fill(0, 0, width, height, Ui.alpha(0xB0050508, ease));
 
         int w = Math.min(width - 20, 400);
-        int h = Math.min(height - 20, 250);
+        int h = Math.min(height - 20, 270);
         int x = (width - w) / 2;
         int y = (height - h) / 2 + Math.round((1f - ease) * 14f);
 
@@ -177,6 +177,7 @@ public final class MenuScreen extends Screen {
                 cy = toggleRow(k, cy, "Panel de modulos", cfg.modulesPanel, () -> cfg.modulesPanel = !cfg.modulesPanel);
                 cy = toggleRow(k, cy, "Panel de teclas", cfg.keybindsPanel, () -> cfg.keybindsPanel = !cfg.keybindsPanel);
                 cy = toggleRow(k, cy, "Particulas", cfg.particles, () -> cfg.particles = !cfg.particles);
+                cy = toggleRow(k, cy, "Manos negras", cfg.hands, () -> cfg.hands = !cfg.hands);
                 sliderRow(k, cy, "Tamano HUD", (cfg.hudScale - 1) / 2f, "x" + cfg.hudScale,
                         f -> cfg.hudScale = 1 + Math.round(f * 2f));
             }
@@ -185,9 +186,18 @@ public final class MenuScreen extends Screen {
                 cy = sliderRow(k, cy, "Brillo fullbright", (cfg.fullbrightLevel - 2f) / 13f,
                         Math.round(cfg.fullbrightLevel) + "", f -> cfg.fullbrightLevel = 2f + Math.round(f * 13f));
                 cy = toggleRow(k, cy, "Quitar lluvia", cfg.noRain, () -> cfg.noRain = !cfg.noRain);
+            }
+            case 2 -> {
                 cy = toggleRow(k, cy, "Lineas del cielo", cfg.skyLines, () -> cfg.skyLines = !cfg.skyLines);
+                cy = toggleRow(k, cy, "Logo en el cielo", cfg.skyLogo, () -> cfg.skyLogo = !cfg.skyLogo);
+                cy = sliderRow(k, cy, "Tamano logo", cfg.logoSize / 100f, cfg.logoSize + "%",
+                        f -> cfg.logoSize = Math.round(f * 100f));
                 cy = sliderRow(k, cy, "Intensidad cielo", cfg.skyStrength / 100f, cfg.skyStrength + "%",
                         f -> cfg.skyStrength = Math.round(f * 100f));
+                cy = toggleRow(k, cy, "Truenos en nubes", cfg.thunder, () -> cfg.thunder = !cfg.thunder);
+                cy = sliderRow(k, cy, "Frecuencia truenos", cfg.thunderRate / 100f, cfg.thunderRate + "%",
+                        f -> cfg.thunderRate = Math.round(f * 100f));
+                cy = toggleRow(k, cy, "Sonido de trueno", cfg.thunderSound, () -> cfg.thunderSound = !cfg.thunderSound);
                 c.drawText(font, "Cielo", cx, cy + 3, Ui.alpha(0xFFA0A4B0, ease), false);
                 cy += 14;
                 int chipX = cx;
@@ -206,7 +216,7 @@ public final class MenuScreen extends Screen {
                     chipX += cwid + 4;
                 }
             }
-            case 2 -> drawThemes(k, cfg, cy);
+            case 3 -> drawThemes(k, cfg, cy);
             default -> {
                 c.drawText(font, "kujama09 visuals 1.1.0", cx, cy, Ui.alpha(0xFFFFFFFF, ease), false);
                 c.drawText(font, "Comandos: /kv", cx, cy + 14, Ui.alpha(0xFFA0A4B0, ease), false);

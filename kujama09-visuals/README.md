@@ -14,7 +14,6 @@ de Spotify en pantalla.
   Minecraft no deja reemplazar el cielo del Overworld con una textura, así que las líneas son una capa 2D con
   parallax, recortada en el horizonte. Funciona mejor en terreno abierto. Solo en el Overworld y con cielo visible.
 - **Partículas custom:** destellos y hojas pálidas flotando alrededor tuyo (solo visual, no afectan al servidor).
-- **Espada custom:** reemplaza la textura de la espada de netherite por una hoja oscura con filo violeta.
 - **HUD limpio:** FPS arriba al centro, hora, coordenadas, teclas W A S D + LMB/RMB y CPS, sin paneles pesados.
 - **Música de Spotify (solo Windows):** muestra título y artista en una tarjeta arriba. Lee el título de la ventana
   de la app de escritorio de Spotify con PowerShell cada 3 s; todo es local, no usa internet ni tu cuenta. No muestra
@@ -49,3 +48,11 @@ combate del cliente del video.
 - **Temas de color** (16): `/kv theme <nombre>` o desde la pestana Themes.
 - **Fullbright**: `/kv fullbright` o en World (nivel 2-15). Algunos servidores lo prohiben.
 - **HUD nuevo**: barra superior, panel XYZ, Modules y KeyBinds (`/kv modules`, `/kv keybinds`).
+
+## Novedades 1.2.0
+- **Manos negras** en primera persona con borde del color del tema (`/kv hands`).
+- **Logo en el cielo** (`/kv logo`, tamano en el menu). Por defecto es el zorro de kujama09. Para usar tu propia imagen, guardala como `config/kujama09_visuals/logo.png` y ejecuta `/kv logo reload`.
+
+## Novedades 1.3.0
+- **Cielos realistas** (`/kv sky storm|overcast|dusk`): tormenta, nublado y atardecer. Conservan el ciclo dia/noche.
+- **Truenos en las nubes** (`/kv thunder`): destellos y ramas dentro de las nubes, sin rayos que caigan al suelo. `/kv thunderrate 0-100` y `/kv thundersound` para frecuencia y sonido. Todo desde la pestana Sky del menu.
